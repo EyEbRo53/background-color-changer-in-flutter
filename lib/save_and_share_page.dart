@@ -1,15 +1,19 @@
-import 'dart:typed_data';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:share/share.dart';
+import 'package:path_provider/path_provider.dart';
 
 class SaveSharePage extends StatelessWidget {
   const SaveSharePage({Key? key, this.pickedImageBytes}) : super(key: key);
 
-  // Takes a Uint8List parameter in the constructor
   final Uint8List? pickedImageBytes;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 167, 145, 222),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -26,19 +30,17 @@ class SaveSharePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  // Save image to Android gallery
-                  //_saveImageToGallery(pickedImageBytes);
+                onPressed: () async {
+                  await _saveImageToGallery(context, pickedImageBytes);
                 },
-                child: const Text('Save'),
+                child: const Text('Save Image'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  // Open share option for WhatsApp
-                  _shareImageOnWhatsApp(pickedImageBytes);
+                onPressed: () async {
+                  await _shareImage(context, pickedImageBytes);
                 },
-                child: const Text('Share'),
+                child: const Text('Share Image'),
               ),
               const SizedBox(height: 16),
               const Text('Thank you for using our app'),
@@ -49,8 +51,46 @@ class SaveSharePage extends StatelessWidget {
     );
   }
 
-  void _shareImageOnWhatsApp(Uint8List? imageBytes) {
-    // Implement share image on WhatsApp functionality
-    // Example: ShareUtil.shareOnWhatsApp(imageBytes);
+  Future<void> _saveImageToGallery(
+      BuildContext context, Uint8List? imageBytes) async {
+    if (imageBytes != null) {
+      try {
+        // ignore: unused_local_variable
+        final result =
+            await ImageGallerySaver.saveImage(Uint8List.fromList(imageBytes));
+        // ignore: use_build_context_synchronously
+        _showSnackBar(context, 'Image saved successfully', Colors.green);
+      } on PlatformException catch (error) {
+        // ignore: use_build_context_synchronously
+        _showSnackBar(context, 'Image saving failed: $error', Colors.red);
+      }
+    }
+  }
+
+  Future<void> _shareImage(BuildContext context, Uint8List? imageBytes) async {
+    if (imageBytes != null) {
+      try {
+        // Save the image locally
+        final directory = await getTemporaryDirectory();
+        final file = File('${directory.path}/image.png');
+        await file.writeAsBytes(imageBytes);
+
+        // Share the file path
+        Share.shareFiles([file.path],
+            text: 'Check out this image saved with our app!');
+        // ignore: unused_catch_clause
+      } on PlatformException catch (error) {
+        // Handle the error as needed
+      }
+    }
+  }
+
+  void _showSnackBar(BuildContext context, String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: color,
+      ),
+    );
   }
 }

@@ -41,6 +41,9 @@ class _MainPageState extends State<MainPage> {
   int positionY = 0;
   int? origionalImageWidth;
   int? origionalImageHeight;
+  int textRVal = 0;
+  int textGVal = 0;
+  int textBVal = 0;
   img.Image? _decodedAhhImage;
 
   GlobalKey<PixelColorPickerState> pixelColorPickerKey = GlobalKey();
@@ -180,7 +183,7 @@ class _MainPageState extends State<MainPage> {
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           toolbarHeight: 80,
-          backgroundColor: const Color.fromRGBO(116, 168, 88, 1),
+          backgroundColor: const Color.fromARGB(255, 167, 145, 222),
           leading: SizedBox(
             width: 56.0,
             height: 56.0,
@@ -195,12 +198,12 @@ class _MainPageState extends State<MainPage> {
                   },
                   color: const Color.fromARGB(255, 0, 0, 0),
                 ),
-                const Text(
-                  'go back',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ),
+                // const Text(
+                //   'go back',
+                //   style: TextStyle(
+                //     color: Color.fromARGB(255, 0, 0, 0),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -221,13 +224,13 @@ class _MainPageState extends State<MainPage> {
                     },
                     color: const Color.fromARGB(255, 0, 0, 0),
                   ),
-                  const Text(
-                    'confirm',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
-                    ),
-                    // Add any text properties or styling here
-                  ),
+                  // const Text(
+                  //   'confirm',
+                  //   style: TextStyle(
+                  //     color: Color.fromARGB(255, 0, 0, 0),
+                  //   ),
+                  //   // Add any text properties or styling here
+                  // ),
                 ],
               ),
             ),
@@ -271,7 +274,7 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
         bottomNavigationBar: Container(
-          color: const Color.fromRGBO(116, 168, 88, 1),
+          color: const Color.fromARGB(255, 167, 145, 222),
           width: double.infinity,
           height: 200,
           child: SingleChildScrollView(
@@ -284,8 +287,9 @@ class _MainPageState extends State<MainPage> {
                     min: 10.0,
                     max: 100.0,
                     divisions: 9,
+                    thumbColor: const Color.fromARGB(255, 42, 36, 36),
                     inactiveColor: const Color.fromARGB(175, 55, 51, 51),
-                    activeColor: const Color.fromARGB(239, 255, 255, 255),
+                    activeColor: const Color.fromARGB(237, 71, 61, 61),
                     label: toleranceDiff.toString(),
                     onChanged: (value) {
                       setState(() {
@@ -299,39 +303,207 @@ class _MainPageState extends State<MainPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      SizedBox(
-                        width: 80,
-                        child: TextField(
-                          readOnly: true,
-                          controller: TextEditingController(
-                              text: colorToChange.red.toString()),
-                          decoration: const InputDecoration(labelText: 'R:'),
-                          keyboardType: TextInputType.number,
+                      Container(
+                        height: 80,
+                        decoration: const BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10.0),
+                            topRight: Radius.circular(10.0),
+                            bottomLeft: Radius.circular(10.0),
+                            bottomRight: Radius.circular(10.0),
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 80,
-                        child: TextField(
-                          readOnly: true,
-                          controller: TextEditingController(
-                              text: colorToChange.green.toString()),
-                          decoration: const InputDecoration(labelText: 'G:'),
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 80,
-                        child: TextField(
-                          readOnly: true,
-                          controller: TextEditingController(
-                              text: colorToChange.blue.toString()),
-                          decoration: const InputDecoration(labelText: 'B:'),
-                          keyboardType: TextInputType.number,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 80,
+                              child: TextField(
+                                controller: TextEditingController(
+                                  text: textRVal.toString(),
+                                ),
+                                decoration: const InputDecoration(
+                                  prefixText: 'R:',
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(32.0),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(32.0),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Colors.amber,
+                                      width: 3.0,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(32.0)),
+                                    borderSide: BorderSide(color: Colors.amber),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(32.0)),
+                                    borderSide: BorderSide(
+                                        color: Color.fromARGB(255, 255, 0, 0)),
+                                  ),
+                                  counterText: '',
+                                ),
+                                keyboardType: TextInputType.number,
+                                textAlign: TextAlign.center,
+                                maxLength: 3,
+                                maxLines: 1,
+                                onSubmitted: (value) {
+                                  int enteredValue =
+                                      int.tryParse(value.toString()) ?? 0;
+                                  setState(() {
+                                    textRVal = enteredValue.abs() % 256;
+                                  });
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 80,
+                              child: TextField(
+                                controller: TextEditingController(
+                                  text: textGVal.toString(),
+                                ),
+                                decoration: const InputDecoration(
+                                  prefixText: 'G:',
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(32.0),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(32.0),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(32.0)),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(32.0)),
+                                    borderSide: BorderSide(
+                                        color: Color.fromARGB(255, 255, 0, 0)),
+                                  ),
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  counterText: '',
+                                ),
+                                keyboardType: TextInputType.number,
+                                textAlign: TextAlign.center,
+                                maxLength: 3,
+                                maxLines: 1,
+                                onSubmitted: (value) {
+                                  int enteredValue =
+                                      int.tryParse(value.toString()) ?? 0;
+                                  setState(() {
+                                    textGVal = enteredValue.abs() % 256;
+                                  });
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 80,
+                              child: TextField(
+                                controller: TextEditingController(
+                                  text: textBVal.toString(),
+                                ),
+                                decoration: const InputDecoration(
+                                  prefixText: 'B:',
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(32.0),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(32.0),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(32.0)),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(32.0)),
+                                    borderSide: BorderSide(
+                                        color: Color.fromARGB(255, 255, 0, 0)),
+                                  ),
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  counterText: '',
+                                ),
+                                keyboardType: TextInputType.number,
+                                textAlign: TextAlign.center,
+                                maxLength: 3,
+                                maxLines: 1,
+                                onSubmitted: (value) {
+                                  int enteredValue =
+                                      int.tryParse(value.toString()) ?? 0;
+                                  setState(() {
+                                    textBVal = enteredValue.abs() % 256;
+                                  });
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 80,
+                              width: 40,
+                              child: IconButton(
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                                icon: const Icon(Icons.check),
+                                onPressed: () {
+                                  if (colorToChange != Colors.transparent) {
+                                    setState(() {
+                                      newColor = Color.fromARGB(
+                                          255, textRVal, textGVal, textBVal);
+                                    });
+                                    //print rgb
+                                    pixelColorPickerKey = GlobalKey();
+                                    changeColor(
+                                        positionX,
+                                        positionY,
+                                        img.getColor(
+                                            colorToChange.red,
+                                            colorToChange.green,
+                                            colorToChange.blue),
+                                        img.getColor(newColor.red,
+                                            newColor.green, newColor.blue),
+                                        toleranceDiff);
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Container(
-                        width: 80,
-                        height: 80,
+                        width: 50,
+                        height: 50,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: colorToChange,
@@ -368,8 +540,16 @@ class _MainPageState extends State<MainPage> {
                               color: const Color.fromRGBO(0, 0, 0, 1),
                             ),
                             const Text(
-                              'pick color',
-                              // Add any text properties or styling here
+                              'Pick Color',
+                              style: TextStyle(
+                                fontFamily:
+                                    'Times New Roman', // Example font family
+                                fontWeight: FontWeight.normal,
+
+                                //fontWeight: FontWeight.w900,
+                                fontSize: 13,
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                              ), // Add any text properties or styling here
                             ),
                           ],
                         ),
@@ -386,13 +566,22 @@ class _MainPageState extends State<MainPage> {
                                 if (widget.imageStack.length > 1) {
                                   widget.imageStack.removeLast();
                                 }
+                                pixelColorPickerKey = GlobalKey();
                                 setState(() {});
                               },
                               color: const Color.fromARGB(255, 0, 0, 0),
                             ),
                             const Text(
-                              'undo',
-                              // Add any text properties or styling here
+                              'Undo',
+                              style: TextStyle(
+                                fontFamily:
+                                    'Times New Roman', // Example font family
+                                fontWeight: FontWeight.normal,
+
+                                //fontWeight: FontWeight.w900,
+                                fontSize: 13,
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                              ), // Add any text properties or styling here
                             ),
                           ],
                         ),
@@ -412,8 +601,16 @@ class _MainPageState extends State<MainPage> {
                               color: const Color.fromARGB(255, 0, 0, 0),
                             ),
                             const Text(
-                              'select color',
-                              // Add any text properties or styling here
+                              'Select Color',
+                              style: TextStyle(
+                                fontFamily:
+                                    'Times New Roman', // Example font family
+                                fontWeight: FontWeight.normal,
+
+                                //fontWeight: FontWeight.w900,
+                                fontSize: 12,
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                              ), // Add any text properties or styling here
                             ),
                           ],
                         ),
