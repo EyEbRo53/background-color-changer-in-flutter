@@ -1,6 +1,7 @@
-# tempapp
+# background color changer
 
-A new Flutter project.
+This is the final project assigned to us by our Software Requirements Engineering instructor. According to the requirements given, the app allows user to upload an image and use pick color, undo and color input funcionalities to allow the changing of selected color to another color. 
+App is simple to use and we have tried to keep it aesthetic and intuitive.
 
 ## Getting Started
 
